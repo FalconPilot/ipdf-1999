@@ -26,8 +26,7 @@ const formatHardpoints = (hardpoints: Record<string, Hardpoint>) =>
 
 const isCompatible = (p1: GunPart, p2: GunPart) => {
 
-  // Mandatory typeguard
-  // TODO - Check for 1-level of object equality
+  // Check for hardpoints transfer compatibility
   if (p1.hardpoints && p2.hardpoints) {
     return formatHardpoints(p1.hardpoints) === formatHardpoints(p2.hardpoints)
   }
