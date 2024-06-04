@@ -5,7 +5,7 @@ import { GunCore, Hardpoint } from '~/types'
 import { compileSize, px, sizeDiv, sizeMult, sizeSub } from '~/utils'
 import { useGunEditor } from '~/app/contexts'
 
-import { PartImage } from './gun-part'
+import { RecursiveGunPart } from './recursive-gun-part'
 
 const CANVAS_HEIGHT = px(400)
 const CANVAS_WIDTH = px(1200)
@@ -74,7 +74,7 @@ export const GunCanvas: React.FC<{
           onClick={closeMenu}
           style={{
             position: 'absolute',
-            transition: '1s',
+            transition: '0.2s',
             top: compileSize(top),
             left: compileSize(left),
             width: compileSize(CANVAS_WIDTH),
@@ -83,7 +83,7 @@ export const GunCanvas: React.FC<{
             backgroundColor: '#CCC',
           }}
         >
-          <PartImage
+          <RecursiveGunPart
             xray={xray}
             hardpoint={gun.coreHardpoint}
             canvasHeight={CANVAS_HEIGHT}

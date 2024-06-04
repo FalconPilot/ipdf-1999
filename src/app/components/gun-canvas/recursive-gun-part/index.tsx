@@ -1,17 +1,14 @@
 import * as React from 'react'
-import { useGunEditor } from '~/app/contexts'
+import { createPortal } from 'react-dom'
 
+import { useGunEditor } from '~/app/contexts'
+import { Button } from '~/app/styled'
 import { CssSize, GunPart, Hardpoint } from '~/types'
-import {
-  compileSize,
-  entriesOf,
-  getPositionWithParent,
-  getRootPosition,
-  px,
-} from '~/utils'
+import { compileSize, entriesOf } from '~/utils'
 
 import { ContextualMenu } from '../contextual-menu'
-import { createPortal } from 'react-dom'
+import { getPositionWithParent, getRootPosition } from './utils'
+import { PartImage } from './styled'
 
 const formatHardpoints = (hardpoints: Record<string, Hardpoint>) =>
   JSON.stringify(
@@ -40,7 +37,6 @@ type PropsBase = {
   hardpoint: Hardpoint
   canvasHeight: CssSize<'px'>
   canvasWidth: CssSize<'px'>
-  depth?: number
   patchGun: (coreHardpoint: Hardpoint) => void
 }
 
@@ -61,9 +57,8 @@ type PropsWithoutParent = PropsBase & {
 }
 
 // Single part recursive component
-export const PartImage: React.FC<PropsWithoutParent | PropsWithParent> = ({
+export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = ({
   xray,
-  depth = 0,
   parent,
   parentTop,
   parentLeft,
@@ -159,14 +154,12 @@ export const PartImage: React.FC<PropsWithoutParent | PropsWithParent> = ({
   return (
     <>
       {partsMenu && createPortal(
-        <button
-          onClick={evt => {
-            evt.stopPropagation()
-            toggleMenu()
-          }}
+        <Button
+          onClick={toggleMenu}
+          stopPropagation
         >
           {hardpoint.name}
-        </button>,
+        </Button>,
         partsMenu,
       )}
       {menu && contextualMenu && (
@@ -179,33 +172,17 @@ export const PartImage: React.FC<PropsWithoutParent | PropsWithParent> = ({
           contextualMenu,
         )
       )}
-      <button
-        style={{
-          position: 'absolute',
-          top: compileSize(topPos),
-          left: compileSize(leftPos),
-          zIndex: hardpoint.zlayer,
-          width: compileSize(px(hardpoint.part.asset.width)),
-          height: compileSize(px(hardpoint.part.asset.height)),
-          opacity: xray ? 0.5 : 1,
-          transition: `0.${(depth + 1) * 1.5}s`,
-          border: 'none',
-          background: 'none',
-        }}
-      >
-        <img
-          src={hardpoint.part.asset.src}
-          onClick={evt => {
-            evt.stopPropagation()
-            toggleMenu()
-          }}
-        />
-      </button>
-      {hardpoint.part.hardpoints && entriesOf(hardpoint.part.hardpoints).map(([key, hp]) => (
         <PartImage
+          src={hardpoint.part.asset.src}
+          $top={topPos}
+          $left={leftPos}
+          $xray={xray}
+          $zIndex={hardpoint.zlayer}
+        />
+      {hardpoint.part.hardpoints && entriesOf(hardpoint.part.hardpoints).map(([key, hp]) => (
+        <RecursiveGunPart
           key={key}
           xray={xray}
-          depth={depth + 1}
           parent={hardpoint}
           parentTop={topPos}
           parentLeft={leftPos}
