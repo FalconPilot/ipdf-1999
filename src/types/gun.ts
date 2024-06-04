@@ -5,6 +5,8 @@ import { CssSize } from './css'
 export type HardpointOriginX = 'left' | 'right' | 'center'
 export type HardpointOriginY = 'top' | 'bottom' | 'center'
 
+export type CanvasSize = 'rifle' | 'handgun'
+
 export type GunPart = {
   name: string
   shortName: string
@@ -31,5 +33,6 @@ export type Hardpoint = {
 
 export type GunCore = {
   name: string
+  canvas: CanvasSize
   coreHardpoint: Hardpoint
 }

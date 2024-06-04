@@ -1,6 +1,7 @@
 export * from './barrels'
 export * from './bolts'
 export * from './gasblocks'
+export * from './gastubes'
 export * from './grips'
 export * from './handguards'
 export * from './handles'

@@ -10,6 +10,7 @@ export * from './parts'
 
 export const AR15: GunCore = {
   name: 'AR-15',
+  canvas: 'rifle',
   coreHardpoint: {
     name: 'Lower receiver',
     zlayer: 50,

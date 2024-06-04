@@ -1,5 +1,6 @@
 import handguardShortStd from 'public/parts/ar15_handguard_short_std.png'
 import risShortTac from 'public/parts/ar15_ris_tac.png'
+import risShortSkel from 'public/parts/ar15_handguard_skel.png'
 
 import { GunPart, Hardpoint } from '~/types'
 import { px } from '~/utils'
@@ -34,6 +35,15 @@ export const AR15RISTac: GunPart = {
   name: 'Tactical short RIS',
   shortName: 'Short TAC-RIS',
   asset: risShortTac,
+  offsetX: px(0),
+  offsetY: px(0),
+  hardpoints,
+}
+
+export const AR15RISSkel: GunPart = {
+  name: 'Skeletonized short RIS',
+  shortName: 'Short SKEL-RIS',
+  asset: risShortSkel,
   offsetX: px(0),
   offsetY: px(0),
   hardpoints,

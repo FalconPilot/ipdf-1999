@@ -3,7 +3,7 @@ import upperValkyrie from 'public/parts/ar15_upper_valkyrie.png'
 import { GunPart, Hardpoint } from '~/types'
 import { px } from '~/utils'
 
-import { AR15BarrelShort } from './barrels'
+import { AR15BarrelShort, AR15BarrelStub } from './barrels'
 import { AR15BoltStandard } from './bolts'
 import { AR15HandleStandard } from './handles'
 import { AR15CarryHandle } from './sights'
@@ -19,6 +19,7 @@ const hardpoints: Record<string, Hardpoint> = {
     offsetY: px(1),
     part: AR15BarrelShort,
     options: [
+      AR15BarrelStub,
       AR15BarrelShort,
     ],
   },
@@ -38,9 +39,9 @@ const hardpoints: Record<string, Hardpoint> = {
     name: 'Charging handle',
     zlayer: 16,
     originX: 'center',
-    originY: 'center',
+    originY: 'top',
     offsetX: px(-11),
-    offsetY: px(-14),
+    offsetY: px(16),
     part: AR15HandleStandard,
     options: [
       AR15HandleStandard,

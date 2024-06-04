@@ -13,7 +13,7 @@ const HomePage: React.FC = () => (
     </Head>
     <div>
       <GunEditorContext>
-        <GunCanvas gun={AR15} />
+        <GunCanvas gun={AR15} scale={0.5} />
       </GunEditorContext>
     </div>
   </>

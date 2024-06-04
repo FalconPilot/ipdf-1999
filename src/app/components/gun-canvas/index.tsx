@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { GunCore, Hardpoint } from '~/types'
-import { px } from '~/utils'
+import { compileSize, px, sizeMult } from '~/utils'
 import { useGunEditor } from '~/app/contexts'
 
 import { PartImage } from './part-image'
@@ -11,7 +11,8 @@ const CANVAS_WIDTH = px(1200)
 
 export const GunCanvas: React.FC<{
   gun: GunCore
-}> = ({ gun: initialGun }) => {
+  scale?: number
+}> = ({ gun: initialGun, scale = 1 }) => {
 
   const [xray, setXray] = React.useState(false)
   const [{ gun, menuToggler }, { setGun, setMenuToggler }] = useGunEditor()
@@ -51,8 +52,9 @@ export const GunCanvas: React.FC<{
         onClick={closeMenu}
         style={{
           position: 'relative',
-          height: CANVAS_HEIGHT[0],
-          width: CANVAS_WIDTH[0],
+          height: compileSize(CANVAS_HEIGHT),
+          width: compileSize(CANVAS_WIDTH),
+          transform: `scale(${scale})`,
         }}
       >
         <PartImage

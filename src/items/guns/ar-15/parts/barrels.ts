@@ -1,10 +1,16 @@
 import barrelShort from 'public/parts/ar15_barrel_short.png'
+import barrelStub from 'public/parts/ar15_barrel_stub.png'
 
 import { GunPart, Hardpoint } from '~/types'
 import { px } from '~/utils'
 
-import { AR15HandguardShortStd, AR15RISTac } from './handguards'
+import {
+  AR15HandguardShortStd,
+  AR15RISSkel,
+  AR15RISTac,
+} from './handguards'
 import { AR15FlashHiderStd, AR15SupressorTac } from './muzzles'
+import { AR15GasTubeShort } from './gastubes'
 
 const muzzle: Hardpoint = {
   name: 'Muzzle',
@@ -32,8 +38,24 @@ const shortHandguardHardpoints: Record<string, Hardpoint> = {
     options: [
       AR15HandguardShortStd,
       AR15RISTac,
+      AR15RISSkel,
     ],
   },
+  gastube: {
+    name: 'Gas tube',
+    zlayer: 11,
+    originX: 'center',
+    originY: 'top',
+    offsetX: px(-80),
+    offsetY: px(-0),
+    part: AR15GasTubeShort,
+    options: [
+      AR15GasTubeShort,
+    ],
+  },
+}
+
+const commonHardpoints = {
   muzzle,
 }
 
@@ -43,5 +65,30 @@ export const AR15BarrelShort: GunPart = {
   asset: barrelShort,
   offsetX: px(0),
   offsetY: px(0),
-  hardpoints: shortHandguardHardpoints,
+  hardpoints: {
+    ...shortHandguardHardpoints,
+    ...commonHardpoints,
+  },
+}
+
+export const AR15BarrelStub: GunPart = {
+  name: 'Stub barrel',
+  shortName: 'Stub',
+  asset: barrelStub,
+  offsetX: px(0),
+  offsetY: px(0),
+  hardpoints: {
+    ...shortHandguardHardpoints,
+    ...commonHardpoints,
+  },
+  childrenOffsets: {
+    handguard: {
+      offsetX: px(46),
+      offsetY: px(0),
+    },
+    gastube: {
+      offsetX: px(46),
+      offsetY: px(0),
+    },
+  },
 }
