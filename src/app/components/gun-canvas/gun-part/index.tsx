@@ -10,7 +10,8 @@ import {
   px,
 } from '~/utils'
 
-import { ContextualMenu } from './contextual-menu'
+import { ContextualMenu } from '../contextual-menu'
+import { createPortal } from 'react-dom'
 
 const formatHardpoints = (hardpoints: Record<string, Hardpoint>) =>
   JSON.stringify(
@@ -39,6 +40,7 @@ type PropsBase = {
   hardpoint: Hardpoint
   canvasHeight: CssSize<'px'>
   canvasWidth: CssSize<'px'>
+  depth?: number
   patchGun: (coreHardpoint: Hardpoint) => void
 }
 
@@ -61,6 +63,7 @@ type PropsWithoutParent = PropsBase & {
 // Single part recursive component
 export const PartImage: React.FC<PropsWithoutParent | PropsWithParent> = ({
   xray,
+  depth = 0,
   parent,
   parentTop,
   parentLeft,
@@ -149,15 +152,32 @@ export const PartImage: React.FC<PropsWithoutParent | PropsWithParent> = ({
     ? getPositionWithParent(hardpoint, hardpointKey, parent, parentLeft, 'X', 'width')
     : getRootPosition(hardpoint, canvasWidth, 'X', 'width')
 
+  const partsMenu = document.getElementById('parts-menu')
+  const contextualMenu = document.getElementById('contextual-menu')
+
   // Render
   return (
     <>
-      {menu && (
-        <ContextualMenu
-          title={hardpoint.name}
-          options={hardpoint.options}
-          selectPart={patchPart}
-        />
+      {partsMenu && createPortal(
+        <button
+          onClick={evt => {
+            evt.stopPropagation()
+            toggleMenu()
+          }}
+        >
+          {hardpoint.name}
+        </button>,
+        partsMenu,
+      )}
+      {menu && contextualMenu && (
+        createPortal(
+          <ContextualMenu
+            title={hardpoint.name}
+            options={hardpoint.options}
+            selectPart={patchPart}
+          />,
+          contextualMenu,
+        )
       )}
       <button
         style={{
@@ -168,6 +188,7 @@ export const PartImage: React.FC<PropsWithoutParent | PropsWithParent> = ({
           width: compileSize(px(hardpoint.part.asset.width)),
           height: compileSize(px(hardpoint.part.asset.height)),
           opacity: xray ? 0.5 : 1,
+          transition: `0.${(depth + 1) * 1.5}s`,
           border: 'none',
           background: 'none',
         }}
@@ -184,6 +205,7 @@ export const PartImage: React.FC<PropsWithoutParent | PropsWithParent> = ({
         <PartImage
           key={key}
           xray={xray}
+          depth={depth + 1}
           parent={hardpoint}
           parentTop={topPos}
           parentLeft={leftPos}

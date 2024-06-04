@@ -1,10 +1,11 @@
 import * as React from 'react'
+import { createPortal } from 'react-dom'
 
 import { GunCore, Hardpoint } from '~/types'
-import { compileSize, px, sizeMult } from '~/utils'
+import { compileSize, px, sizeDiv, sizeMult, sizeSub } from '~/utils'
 import { useGunEditor } from '~/app/contexts'
 
-import { PartImage } from './part-image'
+import { PartImage } from './gun-part'
 
 const CANVAS_HEIGHT = px(400)
 const CANVAS_WIDTH = px(1200)
@@ -43,28 +44,55 @@ export const GunCanvas: React.FC<{
     }
   }
 
+  const height = sizeMult([CANVAS_HEIGHT, px(scale)])
+  const width = sizeMult([CANVAS_WIDTH, px(scale)])
+
+  const top = sizeDiv([
+    sizeSub([height, CANVAS_HEIGHT]),
+    px(2),
+  ])
+
+  const left = sizeDiv([
+    sizeSub([width, CANVAS_WIDTH]),
+    px(2),
+  ])
+
   return (
     <div>
       <div>
         <button onClick={() => setXray(!xray)}>Toggle XRAY</button>
       </div>
-      <div
-        onClick={closeMenu}
-        style={{
-          position: 'relative',
-          height: compileSize(CANVAS_HEIGHT),
-          width: compileSize(CANVAS_WIDTH),
-          transform: `scale(${scale})`,
-        }}
-      >
-        <PartImage
-          xray={xray}
-          hardpoint={gun.coreHardpoint}
-          canvasHeight={CANVAS_HEIGHT}
-          canvasWidth={CANVAS_WIDTH}
-          patchGun={patchGun}
-        />
+      <div id='parts-menu'>
+        <h4>Parts</h4>
       </div>
+      <div style={{
+        position: 'relative',
+        height: compileSize(sizeMult([CANVAS_HEIGHT, px(scale)])),
+        width: compileSize(sizeMult([CANVAS_WIDTH, px(scale)])),
+      }}>
+        <div
+          onClick={closeMenu}
+          style={{
+            position: 'absolute',
+            transition: '1s',
+            top: compileSize(top),
+            left: compileSize(left),
+            width: compileSize(CANVAS_WIDTH),
+            height: compileSize(CANVAS_HEIGHT),
+            transform: `scale(${scale})`,
+            backgroundColor: '#CCC',
+          }}
+        >
+          <PartImage
+            xray={xray}
+            hardpoint={gun.coreHardpoint}
+            canvasHeight={CANVAS_HEIGHT}
+            canvasWidth={CANVAS_WIDTH}
+            patchGun={patchGun}
+          />
+        </div>
+      </div>
+      <div id='contextual-menu'></div>
     </div>
   )
 }
