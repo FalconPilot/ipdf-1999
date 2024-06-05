@@ -6,7 +6,7 @@ import { CssSize, GunPart, Hardpoint } from '~/types'
 import { entriesOf } from '~/utils'
 
 import { ContextualMenu } from './contextual-menu'
-import { getPositionWithParent, getRootPosition, isCompatible } from './utils'
+import { getPositionWithParent, getRootPosition, keepCompatibleHardpoints } from './utils'
 import { PartButton, PartButtonImage, PartButtonImageWrapper, PartImage } from './styled'
 
 type PropsBase = {
@@ -78,12 +78,12 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
       return
     }
 
-    if (hardpoint.part && isCompatible(hardpoint.part, newPart)) {
+    if (hardpoint.part) {
       patchHardpoint({
         ...hardpoint,
         part: {
           ...newPart,
-          hardpoints: hardpoint.part.hardpoints,
+          hardpoints: keepCompatibleHardpoints(hardpoint.part, newPart),
         },
       })
       return

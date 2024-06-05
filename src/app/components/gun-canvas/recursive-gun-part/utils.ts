@@ -9,7 +9,6 @@ export const getRootPosition = (
   measure: 'width' | 'height'
 ): CssSize<'px'> => {
   if (!hardpoint.part) {
-    console.warn('No part found for RootPOS')
     return px(0)
   }
 
@@ -62,7 +61,6 @@ export const getPositionWithParent = (
   measure: 'width' | 'height'
 ): CssSize<'px'> => {
   if (!hardpoint.part || !parent.part) {
-    console.warn('No part found for ChildPOS')
     return px(0)
   }
 
@@ -107,26 +105,44 @@ export const getPositionWithParent = (
   }[resultKey]
 }
 
-// Format hardpoints for compatibility checking
-const formatHardpoints = (hardpoints: Record<string, Hardpoint>) =>
-  JSON.stringify(
-    entriesOf(hardpoints)
-      .reduce((acc, [key, entry]) => ({
-        ...acc,
-        [key]: {
-          ...entry,
-          part: null,
-        }
-      }), {})
-  )
-
 // Check hardpoints compatibility
-export const isCompatible = (p1: GunPart, p2: GunPart) => {
+const isCompatible = (h1: Hardpoint, h2: Hardpoint) =>  {
+  const [json1, json2] = [h1, h2].map(hardpoint => JSON.stringify({
+    ...hardpoint,
+    part: null,
+  }))
 
-  // Check for hardpoints transfer compatibility
-  if (p1.hardpoints && p2.hardpoints) {
-    return formatHardpoints(p1.hardpoints) === formatHardpoints(p2.hardpoints)
+  return json1 === json2
+}
+
+export const keepCompatibleHardpoints = (refPart: GunPart, newPart: GunPart): Record<string, Hardpoint> | null => {
+  if (!refPart.hardpoints) {
+    return newPart.hardpoints
   }
 
-  return false
+  if (!newPart.hardpoints) {
+    return refPart.hardpoints
+  }
+
+  return entriesOf(newPart.hardpoints)
+    .reduce<Record<string, Hardpoint>>((acc, [key, hp]) => {
+      if (!refPart.hardpoints?.[key]) {
+        return {
+          ...acc,
+          [key]: hp,
+        }
+      }
+
+      if (isCompatible(hp, refPart.hardpoints[key])) {
+        return {
+          ...acc,
+          [key]: refPart.hardpoints[key]
+        }
+      }
+
+      return {
+        ...acc,
+        [key]: hp,
+      }
+    }, {})
 }

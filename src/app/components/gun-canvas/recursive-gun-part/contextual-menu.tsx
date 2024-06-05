@@ -3,14 +3,13 @@ import * as React from 'react'
 import { GunPart, Hardpoint } from '~/types'
 import { PartButton, PartButtonImage, PartButtonImageWrapper } from './styled'
 import { PartsMenu } from '../styled'
+import { Flex } from '~/styled'
 
 export const ContextualMenu: React.FC<{
   hardpoint: Hardpoint
   selectPart: (part: GunPart | null) => void
 }> = ({ hardpoint, selectPart }) => (
-  <div
-    onClick={evt => { evt.stopPropagation() }}
-  >
+  <Flex direction='column'>
     <h3>{hardpoint.name}</h3>
     <PartsMenu>
       {hardpoint.allowEmpty && (
@@ -36,5 +35,5 @@ export const ContextualMenu: React.FC<{
         </PartButton>
       ))}
     </PartsMenu>
-  </div>
+  </Flex>
 )

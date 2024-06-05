@@ -95,7 +95,7 @@ export const AR15RISSkel: GunPart = {
   shortName: 'Short SKEL-RIS',
   asset: risShortSkel,
   offsetX: px(2),
-  offsetY: px(0),
+  offsetY: px(-1),
   hardpoints: {
     ...commonHardpoints,
     ...topRailHardpoints,

@@ -25,7 +25,6 @@ export const Canvas = styled.div<{
   left: compileSize(left),
   width: compileSize(width),
   height: compileSize(height),
-  transition: '0.2s',
   transform: `scale(${scale})`,
   filter: 'drop-shadow(2px 4px 6px #111)',
 }))
