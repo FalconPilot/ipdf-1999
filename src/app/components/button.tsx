@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import styled from '@emotion/styled'
+
 export const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children?: React.ReactNode
   stopPropagation?: boolean

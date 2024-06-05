@@ -2,19 +2,19 @@ import * as React from 'react'
 import { createPortal } from 'react-dom'
 
 import { useGunEditor } from '~/app/contexts'
-import { Button } from '~/app/components'
 import { CssSize, GunPart, Hardpoint } from '~/types'
 import { entriesOf } from '~/utils'
 
-import { ContextualMenu } from '../contextual-menu'
+import { ContextualMenu } from './contextual-menu'
 import { getPositionWithParent, getRootPosition, isCompatible } from './utils'
-import { PartImage } from './styled'
+import { PartButton, PartButtonImage, PartButtonImageWrapper, PartImage } from './styled'
 
 type PropsBase = {
   xray: boolean
   hardpoint: Hardpoint
   canvasHeight: CssSize<'px'>
   canvasWidth: CssSize<'px'>
+  editable?: boolean
   patchGun: (coreHardpoint: Hardpoint) => void
 }
 
@@ -37,6 +37,7 @@ type PropsWithoutParent = PropsBase & {
 // Single part recursive component
 export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = ({
   xray,
+  editable,
   parent,
   parentTop,
   parentLeft,
@@ -142,12 +143,26 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
   return (
     <>
       {partsMenu && createPortal(
-        <Button
+        <PartButton
           onClick={toggleMenu}
           stopPropagation
+          direction='column'
+          align='center'
+          justify='flex-start'
         >
-          {hardpoint.name}
-        </Button>,
+          <strong>{hardpoint.name}</strong>
+          <PartButtonImageWrapper justify='center' align='center'>
+            {hardpoint.part ? (
+              <PartButtonImage
+                src={hardpoint.part.asset.src}
+                width={hardpoint.part.asset.width / 2}
+                height={hardpoint.part.asset.height / 2}
+              />
+            ) : (
+              <div>+</div>
+            )}
+          </PartButtonImageWrapper>
+        </PartButton>,
         partsMenu,
       )}
       {menu && contextualMenu && (
@@ -168,14 +183,15 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
           $zIndex={hardpoint.zlayer}
         />
       )}
-      {hardpoint.part?.hardpoints && entriesOf(hardpoint.part.hardpoints).map(([key, hp]) => (
+      {hardpoint.part?.hardpoints && entriesOf(hardpoint.part.hardpoints).map(([key, child]) => (
         <RecursiveGunPart
           key={key}
           xray={xray}
+          editable={editable}
           parent={hardpoint}
           parentTop={topPos}
           parentLeft={leftPos}
-          hardpoint={hp}
+          hardpoint={child}
           hardpointKey={key}
           canvasHeight={canvasHeight}
           canvasWidth={canvasWidth}

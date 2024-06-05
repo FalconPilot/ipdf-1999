@@ -36,7 +36,12 @@ const HomePage: React.FC = () => {
           }}
         />
         <GunEditorContext>
-          <GunCanvas gun={AR15} scale={scale / 10} />
+          <GunCanvas
+            gun={AR15}
+            scale={scale / 10}
+            editable
+            displayControls
+          />
         </GunEditorContext>
       </div>
     </>

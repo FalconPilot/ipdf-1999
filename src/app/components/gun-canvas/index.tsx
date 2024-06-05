@@ -5,7 +5,8 @@ import { compileSize, px, sizeDiv, sizeMult, sizeSub } from '~/utils'
 import { useGunEditor } from '~/app/contexts'
 
 import { RecursiveGunPart } from './recursive-gun-part'
-import { CanvasWrapper, PartsMenu } from './styled'
+import { Canvas, CanvasWrapper, PartsMenu } from './styled'
+import { Flex } from '~/styled'
 
 const CANVAS_SIZES: { [k in CanvasSize]: {
   width: CssSize<'px'>
@@ -17,11 +18,22 @@ const CANVAS_SIZES: { [k in CanvasSize]: {
 
 export const GunCanvas: React.FC<{
   gun: GunCore
+  editable?: boolean
+  displayControls?: boolean
   scale?: number
-}> = ({ gun: initialGun, scale = 1 }) => {
+}> = ({
+  gun: initialGun,
+  displayControls,
+  editable,
+  scale = 1,
+}) => {
 
   const [xray, setXray] = React.useState(false)
-  const [{ gun, menuToggler }, { setGun, setMenuToggler }] = useGunEditor()
+  const [{ gun }, { setGun }] = useGunEditor()
+
+  const toggleXray = () => {
+    setXray(!xray)
+  }
 
   React.useEffect(() => {
     setGun(initialGun)
@@ -44,13 +56,6 @@ export const GunCanvas: React.FC<{
     setGun(newGun)
   }
 
-  const closeMenu = () => {
-    if (menuToggler) {
-      menuToggler()
-      setMenuToggler(null)
-    }
-  }
-
   const height = sizeMult([canvasHeight, px(scale)])
   const width = sizeMult([canvasWidth, px(scale)])
 
@@ -65,41 +70,39 @@ export const GunCanvas: React.FC<{
   ])
 
   return (
-    <CanvasWrapper>
-      <div>
-        <button onClick={() => setXray(!xray)}>Toggle XRAY</button>
-      </div>
-      <PartsMenu id='parts-menu'>
-        <h4>Parts</h4>
-      </PartsMenu>
-      <div style={{
-        position: 'relative',
-        height: compileSize(sizeMult([canvasHeight, px(scale)])),
-        width: compileSize(sizeMult([canvasWidth, px(scale)])),
-      }}>
-        <div
-          onClick={closeMenu}
-          style={{
-            position: 'absolute',
-            transition: '0.2s',
-            top: compileSize(top),
-            left: compileSize(left),
-            width: compileSize(canvasWidth),
-            height: compileSize(canvasHeight),
-            transform: `scale(${scale})`,
-            backgroundColor: '#CCC',
-          }}
+    <Flex direction='column' align='center'>
+      {displayControls && (
+        <div>
+          <button onClick={toggleXray}>Toggle XRAY</button>
+        </div>
+      )}
+      {editable && (
+        <PartsMenu id='parts-menu' />
+      )}
+      <CanvasWrapper
+        height={sizeMult([canvasHeight, px(scale)])}
+        width={sizeMult([canvasWidth, px(scale)])}
+      >
+        <Canvas
+          top={top}
+          left={left}
+          width={canvasWidth}
+          height={canvasHeight}
+          scale={scale}
         >
           <RecursiveGunPart
             xray={xray}
+            editable={editable}
             hardpoint={gun.coreHardpoint}
             canvasHeight={canvasHeight}
             canvasWidth={canvasWidth}
             patchGun={patchGun}
           />
-        </div>
-      </div>
-      <div id='contextual-menu'></div>
-    </CanvasWrapper>
+        </Canvas>
+      </CanvasWrapper>
+      {editable && (
+        <PartsMenu id='contextual-menu' />
+      )}
+    </Flex>
   )
 }
