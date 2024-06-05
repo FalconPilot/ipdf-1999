@@ -28,7 +28,7 @@ const hardpoints: Record<string, Hardpoint> = {
     zlayer: 15,
     originX: 'center',
     originY: 'center',
-    offsetX: px(-5),
+    offsetX: px(-3),
     offsetY: px(-3),
     part: AR15BoltStandard,
     options: [

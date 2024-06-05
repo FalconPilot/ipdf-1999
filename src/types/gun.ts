@@ -28,6 +28,7 @@ export type Hardpoint = {
   offsetX: CssSize<'px'>
   offsetY: CssSize<'px'>
   options: GunPart[]
+  allowEmpty?: boolean
   part: GunPart | null
 }
 

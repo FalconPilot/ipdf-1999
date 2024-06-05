@@ -32,7 +32,7 @@ const shortHandguardHardpoints: Record<string, Hardpoint> = {
     zlayer: 70,
     originX: 'center',
     originY: 'center',
-    offsetX: px(-74),
+    offsetX: px(-73),
     offsetY: px(0),
     part: AR15HandguardShortStd,
     options: [
@@ -47,7 +47,7 @@ const shortHandguardHardpoints: Record<string, Hardpoint> = {
     originX: 'center',
     originY: 'top',
     offsetX: px(-80),
-    offsetY: px(-0),
+    offsetY: px(2),
     part: AR15GasTubeShort,
     options: [
       AR15GasTubeShort,

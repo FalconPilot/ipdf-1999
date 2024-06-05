@@ -1,5 +1,5 @@
-import { CssSize, Hardpoint } from '~/types'
-import { px, sizeAdd, sizeDiv, sizeSub } from '~/utils'
+import { CssSize, GunPart, Hardpoint } from '~/types'
+import { entriesOf, px, sizeAdd, sizeDiv, sizeSub } from '~/utils'
 
 // Get root element position
 export const getRootPosition = (
@@ -105,4 +105,28 @@ export const getPositionWithParent = (
       offset,
     ]),
   }[resultKey]
+}
+
+// Format hardpoints for compatibility checking
+const formatHardpoints = (hardpoints: Record<string, Hardpoint>) =>
+  JSON.stringify(
+    entriesOf(hardpoints)
+      .reduce((acc, [key, entry]) => ({
+        ...acc,
+        [key]: {
+          ...entry,
+          part: null,
+        }
+      }), {})
+  )
+
+// Check hardpoints compatibility
+export const isCompatible = (p1: GunPart, p2: GunPart) => {
+
+  // Check for hardpoints transfer compatibility
+  if (p1.hardpoints && p2.hardpoints) {
+    return formatHardpoints(p1.hardpoints) === formatHardpoints(p2.hardpoints)
+  }
+
+  return false
 }

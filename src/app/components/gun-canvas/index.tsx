@@ -1,14 +1,19 @@
 import * as React from 'react'
-import { createPortal } from 'react-dom'
 
-import { GunCore, Hardpoint } from '~/types'
+import { CanvasSize, CssSize, GunCore, Hardpoint } from '~/types'
 import { compileSize, px, sizeDiv, sizeMult, sizeSub } from '~/utils'
 import { useGunEditor } from '~/app/contexts'
 
 import { RecursiveGunPart } from './recursive-gun-part'
+import { CanvasWrapper, PartsMenu } from './styled'
 
-const CANVAS_HEIGHT = px(400)
-const CANVAS_WIDTH = px(1200)
+const CANVAS_SIZES: { [k in CanvasSize]: {
+  width: CssSize<'px'>
+  height: CssSize<'px'>
+} } = {
+  rifle: { width: px(1024), height: px(400) },
+  handgun: { width: px(800), height: px(400) }
+}
 
 export const GunCanvas: React.FC<{
   gun: GunCore
@@ -28,6 +33,8 @@ export const GunCanvas: React.FC<{
     )
   }
 
+  const { width: canvasWidth, height: canvasHeight } = CANVAS_SIZES[gun.canvas]
+
   const patchGun = (coreHardpoint: Hardpoint) => {
     const newGun = {
       ...gun,
@@ -44,31 +51,31 @@ export const GunCanvas: React.FC<{
     }
   }
 
-  const height = sizeMult([CANVAS_HEIGHT, px(scale)])
-  const width = sizeMult([CANVAS_WIDTH, px(scale)])
+  const height = sizeMult([canvasHeight, px(scale)])
+  const width = sizeMult([canvasWidth, px(scale)])
 
   const top = sizeDiv([
-    sizeSub([height, CANVAS_HEIGHT]),
+    sizeSub([height, canvasHeight]),
     px(2),
   ])
 
   const left = sizeDiv([
-    sizeSub([width, CANVAS_WIDTH]),
+    sizeSub([width, canvasWidth]),
     px(2),
   ])
 
   return (
-    <div>
+    <CanvasWrapper>
       <div>
         <button onClick={() => setXray(!xray)}>Toggle XRAY</button>
       </div>
-      <div id='parts-menu'>
+      <PartsMenu id='parts-menu'>
         <h4>Parts</h4>
-      </div>
+      </PartsMenu>
       <div style={{
         position: 'relative',
-        height: compileSize(sizeMult([CANVAS_HEIGHT, px(scale)])),
-        width: compileSize(sizeMult([CANVAS_WIDTH, px(scale)])),
+        height: compileSize(sizeMult([canvasHeight, px(scale)])),
+        width: compileSize(sizeMult([canvasWidth, px(scale)])),
       }}>
         <div
           onClick={closeMenu}
@@ -77,8 +84,8 @@ export const GunCanvas: React.FC<{
             transition: '0.2s',
             top: compileSize(top),
             left: compileSize(left),
-            width: compileSize(CANVAS_WIDTH),
-            height: compileSize(CANVAS_HEIGHT),
+            width: compileSize(canvasWidth),
+            height: compileSize(canvasHeight),
             transform: `scale(${scale})`,
             backgroundColor: '#CCC',
           }}
@@ -86,13 +93,13 @@ export const GunCanvas: React.FC<{
           <RecursiveGunPart
             xray={xray}
             hardpoint={gun.coreHardpoint}
-            canvasHeight={CANVAS_HEIGHT}
-            canvasWidth={CANVAS_WIDTH}
+            canvasHeight={canvasHeight}
+            canvasWidth={canvasWidth}
             patchGun={patchGun}
           />
         </div>
       </div>
       <div id='contextual-menu'></div>
-    </div>
+    </CanvasWrapper>
   )
 }

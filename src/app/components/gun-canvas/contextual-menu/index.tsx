@@ -1,17 +1,19 @@
 import * as React from 'react'
 
-import { GunPart } from '~/types'
+import { GunPart, Hardpoint } from '~/types'
 
 export const ContextualMenu: React.FC<{
-  title: string
-  options: GunPart[]
-  selectPart: (part: GunPart) => void
-}> = ({ title, options, selectPart }) => (
+  hardpoint: Hardpoint
+  selectPart: (part: GunPart | null) => void
+}> = ({ hardpoint, selectPart }) => (
   <div
     onClick={evt => { evt.stopPropagation() }}
   >
-    <h3>{title}</h3>
-    {options.map(part => (
+    <h3>{hardpoint.name}</h3>
+    {hardpoint.allowEmpty && (
+      <button onClick={() => selectPart(null)}>Nothing</button>
+    )}
+    {hardpoint.options.map(part => (
       <button key={part.name} onClick={() => selectPart(part)}>
         {part.shortName}
       </button>

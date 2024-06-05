@@ -2,35 +2,13 @@ import * as React from 'react'
 import { createPortal } from 'react-dom'
 
 import { useGunEditor } from '~/app/contexts'
-import { Button } from '~/app/styled'
+import { Button } from '~/app/components'
 import { CssSize, GunPart, Hardpoint } from '~/types'
-import { compileSize, entriesOf } from '~/utils'
+import { entriesOf } from '~/utils'
 
 import { ContextualMenu } from '../contextual-menu'
-import { getPositionWithParent, getRootPosition } from './utils'
+import { getPositionWithParent, getRootPosition, isCompatible } from './utils'
 import { PartImage } from './styled'
-
-const formatHardpoints = (hardpoints: Record<string, Hardpoint>) =>
-  JSON.stringify(
-    entriesOf(hardpoints)
-      .reduce((acc, [key, entry]) => ({
-        ...acc,
-        [key]: {
-          ...entry,
-          part: null,
-        }
-      }), {})
-  )
-
-const isCompatible = (p1: GunPart, p2: GunPart) => {
-
-  // Check for hardpoints transfer compatibility
-  if (p1.hardpoints && p2.hardpoints) {
-    return formatHardpoints(p1.hardpoints) === formatHardpoints(p2.hardpoints)
-  }
-
-  return false
-}
 
 type PropsBase = {
   xray: boolean
@@ -70,7 +48,7 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
   patchParent,
 }) => {
 
-  // Patch the entire hardpoint and go up the parts linked list
+  // Patch the entire hardpoint and go up the parts list
   const patchHardpoint = (newHardpoint: Hardpoint) => {
     if (patchParent && parent.part && hardpointKey) {
       patchParent({
@@ -89,8 +67,16 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
     patchGun(newHardpoint)
   }
 
-  // Patch this single part
-  const patchPart = (newPart: GunPart) => {
+  // Patch from this part
+  const patchPart = (newPart: GunPart | null) => {
+    if (newPart === null) {
+      patchHardpoint({
+        ...hardpoint,
+        part: null,
+      })
+      return
+    }
+
     if (hardpoint.part && isCompatible(hardpoint.part, newPart)) {
       patchHardpoint({
         ...hardpoint,
@@ -109,7 +95,16 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
   }
 
   const [menu, setMenu] = React.useState(false)
+  const [partsMenu, setPartsMenu] = React.useState<HTMLElement | null>(null)
+  const [contextualMenu, setContextualMenu] = React.useState<HTMLElement | null>(null)
+
   const [{ menuToggler }, { setMenuToggler }] = useGunEditor()
+
+  // Get HTMLElement on render
+  React.useEffect(() => {
+    setPartsMenu(document.getElementById('parts-menu'))
+    setContextualMenu(document.getElementById('contextual-menu'))
+  }, [])
 
   const closeMenu = () => {
     setMenu(false)
@@ -134,10 +129,6 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
     setMenuToggler(closeMenu)
   }
 
-  if (!hardpoint.part) {
-    return null
-  }
-
   // Calculate X/Y positions in canvas
   const topPos = parent && parentTop
     ? getPositionWithParent(hardpoint, hardpointKey, parent, parentTop, 'Y', 'height')
@@ -146,9 +137,6 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
   const leftPos = parent && parentLeft
     ? getPositionWithParent(hardpoint, hardpointKey, parent, parentLeft, 'X', 'width')
     : getRootPosition(hardpoint, canvasWidth, 'X', 'width')
-
-  const partsMenu = document.getElementById('parts-menu')
-  const contextualMenu = document.getElementById('contextual-menu')
 
   // Render
   return (
@@ -165,13 +153,13 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
       {menu && contextualMenu && (
         createPortal(
           <ContextualMenu
-            title={hardpoint.name}
-            options={hardpoint.options}
+            hardpoint={hardpoint}
             selectPart={patchPart}
           />,
           contextualMenu,
         )
       )}
+      {hardpoint.part && (
         <PartImage
           src={hardpoint.part.asset.src}
           $top={topPos}
@@ -179,7 +167,8 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
           $xray={xray}
           $zIndex={hardpoint.zlayer}
         />
-      {hardpoint.part.hardpoints && entriesOf(hardpoint.part.hardpoints).map(([key, hp]) => (
+      )}
+      {hardpoint.part?.hardpoints && entriesOf(hardpoint.part.hardpoints).map(([key, hp]) => (
         <RecursiveGunPart
           key={key}
           xray={xray}
