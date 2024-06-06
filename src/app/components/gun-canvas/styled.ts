@@ -1,8 +1,27 @@
 import styled from '@emotion/styled'
 
-import { flexCss } from '~/styled'
+import { Flex, flexCss } from '~/styled'
 import { CssSize } from '~/types'
 import { compileSize } from '~/utils'
+
+export const CanvasViewport = styled(Flex)({
+  position: 'relative',
+  width: '100%',
+  backgroundColor: '#555',
+  borderTop: '3px solid #777',
+  borderBottom: '3px solid #777',
+
+  '&:after': {
+    content: '"International Police Defense Force"',
+    position: 'absolute',
+    top: 'calc(50% - 20px)',
+    zIndex: 0,
+    fontSize: 40,
+    fontVariant: 'small-caps',
+    opacity: 0.1,
+    transform: 'rotate(-15deg)',
+  }
+})
 
 export const CanvasWrapper = styled.div<{
   width: CssSize<'px'>,
@@ -11,6 +30,7 @@ export const CanvasWrapper = styled.div<{
   position: 'relative',
   width: compileSize(width),
   height: compileSize(height),
+  zIndex: 1,
 }))
 
 export const Canvas = styled.div<{
@@ -35,6 +55,6 @@ export const PartsMenu = styled.div(
     width: '100%',
     overflow: 'auto',
     gap: '8px',
-    padding: '8px',
+    padding: '4px 8px',
   },
 )

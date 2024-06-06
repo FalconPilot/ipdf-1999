@@ -4,6 +4,7 @@ import { GunPart } from '~/types'
 import { px } from '~/utils'
 
 export const AR15StockRegularCollapsible: GunPart = {
+  id: 'ar15_stock_collapsible_regular',
   name: 'Regular collapsible stock',
   shortName: 'Collapsible regular',
   asset: collapsibleRegular,

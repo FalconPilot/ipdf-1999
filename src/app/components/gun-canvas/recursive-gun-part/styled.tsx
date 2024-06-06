@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button } from '~/app/components'
-import { Flex, flexCss } from '~/styled'
+import { FlexProps, flexCss } from '~/styled'
 import { CssSize } from '~/types'
 import { compileSize } from '~/utils'
 
@@ -19,11 +19,14 @@ export const PartImage = styled.img<{
   zIndex: props.$zIndex,
 }))
 
-export const PartButton = styled(Button)(
+export const PartButton = styled(Button)<FlexProps & {
+  translucent?: boolean
+}>(
   flexCss,
-  {
-    padding: '8px',
-  },
+  props => ({
+    padding: '4px 8px',
+    opacity: props.translucent ? 0.5 : 1
+  }),
 )
 
 export const PartButtonImageWrapper = styled.div(

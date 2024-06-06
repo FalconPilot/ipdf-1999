@@ -4,6 +4,7 @@ import { GunPart } from '~/types'
 import { px } from '~/utils'
 
 export const AR15TriggerStandard: GunPart = {
+  id: 'ar15_trigger_standard',
   name: 'Standard trigger',
   shortName: 'Standard',
   asset: triggerStandard,

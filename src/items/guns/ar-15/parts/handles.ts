@@ -4,6 +4,7 @@ import { GunPart } from '~/types'
 import { px } from '~/utils'
 
 export const AR15HandleStandard: GunPart = {
+  id: 'ar15_standard_handle',
   name: 'Standard charging handle',
   shortName: 'Standard',
   asset: handleStandard,

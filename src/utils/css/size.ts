@@ -30,6 +30,13 @@ export const sizeOperation = (
   ] as const
 }
 
+export const sizeSingleOperation = (
+  operation: (a: number) => number
+) => <Unit extends SizeUnit>(size: CssSize<Unit>): CssSize<Unit> => [
+  operation(size[0]),
+  size[1],
+] as const
+
 // Preset size operation functions
 export const sizeAdd = sizeOperation((a, b) => a + b)
 export const sizeSub = sizeOperation((a, b) => a - b)
@@ -37,6 +44,8 @@ export const sizeDiv = sizeOperation((a, b) => a / b)
 export const sizeMult = sizeOperation((a, b) => a * b)
 export const sizeMax = sizeOperation(Math.max)
 export const sizeMin = sizeOperation(Math.min)
+export const sizeFloor = sizeSingleOperation(Math.floor)
+export const sizeCeil = sizeSingleOperation(Math.ceil)
 
 // Compilation function
 export const compileSize = <Unit extends SizeUnit>(size: CssSize<Unit>): string =>

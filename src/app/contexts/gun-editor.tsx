@@ -1,10 +1,12 @@
 import * as React from 'react'
 
 import { GunCore } from '~/types'
+import { getForbiddenList } from '~/utils/gun'
 
 type GunEditorState = readonly [
   GunEditorData: {
     gun: GunCore | null
+    forbiddenList: string[]
     menuToggler: (() => void) | null
   },
   GunEditorActions: {
@@ -15,6 +17,7 @@ type GunEditorState = readonly [
 
 const initialState: GunEditorState[0] = {
   gun: null,
+  forbiddenList: [],
   menuToggler: null,
 }
 
@@ -36,7 +39,8 @@ export const GunEditorContext: React.FC<{
   const setGun = (newGun: GunCore) => {
     setState({
       ...state,
-      gun: newGun
+      gun: newGun,
+      forbiddenList: getForbiddenList(newGun),
     })
   }
 

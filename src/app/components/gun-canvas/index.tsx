@@ -1,19 +1,19 @@
 import * as React from 'react'
 
-import { CanvasSize, CssSize, GunCore, Hardpoint } from '~/types'
-import { compileSize, px, sizeDiv, sizeMult, sizeSub } from '~/utils'
 import { useGunEditor } from '~/app/contexts'
+import { Flex } from '~/styled'
+import { CanvasSize, CssSize, GunCore, Hardpoint } from '~/types'
+import { px, sizeDiv, sizeMult, sizeSub } from '~/utils'
 
 import { RecursiveGunPart } from './recursive-gun-part'
-import { Canvas, CanvasWrapper, PartsMenu } from './styled'
-import { Flex } from '~/styled'
+import { Canvas, CanvasViewport, CanvasWrapper, PartsMenu } from './styled'
 
 const CANVAS_SIZES: { [k in CanvasSize]: {
   width: CssSize<'px'>
   height: CssSize<'px'>
 } } = {
   rifle: { width: px(1024), height: px(400) },
-  handgun: { width: px(800), height: px(400) }
+  handgun: { width: px(800), height: px(400) },
 }
 
 export const GunCanvas: React.FC<{
@@ -29,7 +29,7 @@ export const GunCanvas: React.FC<{
 }) => {
 
   const [xray, setXray] = React.useState(false)
-  const [{ gun }, { setGun }] = useGunEditor()
+  const [{ gun, forbiddenList }, { setGun }] = useGunEditor()
 
   const toggleXray = () => {
     setXray(!xray)
@@ -79,27 +79,30 @@ export const GunCanvas: React.FC<{
       {editable && (
         <PartsMenu id='parts-menu' />
       )}
-      <CanvasWrapper
-        height={sizeMult([canvasHeight, px(scale)])}
-        width={sizeMult([canvasWidth, px(scale)])}
-      >
-        <Canvas
-          top={top}
-          left={left}
-          width={canvasWidth}
-          height={canvasHeight}
-          scale={scale}
+      <CanvasViewport justify='center'>
+        <CanvasWrapper
+          height={sizeMult([canvasHeight, px(scale)])}
+          width={sizeMult([canvasWidth, px(scale)])}
         >
-          <RecursiveGunPart
-            xray={xray}
-            editable={editable}
-            hardpoint={gun.coreHardpoint}
-            canvasHeight={canvasHeight}
-            canvasWidth={canvasWidth}
-            patchGun={patchGun}
-          />
-        </Canvas>
-      </CanvasWrapper>
+          <Canvas
+            top={top}
+            left={left}
+            width={canvasWidth}
+            height={canvasHeight}
+            scale={scale}
+          >
+            <RecursiveGunPart
+              xray={xray}
+              editable={editable}
+              forbiddenList={forbiddenList}
+              hardpoint={gun.coreHardpoint}
+              canvasHeight={canvasHeight}
+              canvasWidth={canvasWidth}
+              patchGun={patchGun}
+            />
+          </Canvas>
+        </CanvasWrapper>
+      </CanvasViewport>
       {editable && (
         <PartsMenu id='contextual-menu' />
       )}

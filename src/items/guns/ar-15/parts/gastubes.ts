@@ -5,6 +5,7 @@ import { GunPart } from '~/types'
 import { px } from '~/utils'
 
 export const AR15GasTubeShort: GunPart = {
+  id: 'ar15_gastube_short',
   name: 'Short gas tube',
   shortName: 'Short',
   asset: gasTubeShort,

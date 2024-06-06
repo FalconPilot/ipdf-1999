@@ -1,11 +1,11 @@
 import lowerValkyrie from 'public/parts/ar15_lower_valkyrie.png'
 import lowerTac from 'public/parts/ar15_lower_nov.png'
 
-import { GunPart, Hardpoint } from '~/types'
+import { GunPart, GunStats, Hardpoint } from '~/types'
 import { px } from '~/utils'
 
 import { AR15GripStandard, AR15GripTactical } from './grips'
-import { AR15UpperValkyrie } from './uppers'
+import { AR15UpperLightweight, AR15UpperValkyrie } from './uppers'
 import { AR15MagStanag30 } from './mags'
 import { AR15StockRegularCollapsible } from './stocks'
 import { AR15TriggerStandard } from './triggers'
@@ -21,6 +21,7 @@ const hardpoints: Record<string, Hardpoint> = {
     part: AR15UpperValkyrie,
     options: [
       AR15UpperValkyrie,
+      AR15UpperLightweight,
     ],
   },
   grip: {
@@ -75,17 +76,25 @@ const hardpoints: Record<string, Hardpoint> = {
 }
 
 export const AR15LowerValkyrie: GunPart = {
+  id: 'ar15_lower_standard',
   name: 'Standard Lower receiver',
   shortName: 'Standard',
   asset: lowerValkyrie,
   offsetX: px(0),
   offsetY: px(0),
   hardpoints,
+  stats: {
+    reliability: 75,
+    rateOfFire: {
+      semiShots: 3,
+    },
+  },
 }
 
 export const AR15LowerTac: GunPart = {
-  name: 'Tactical Lower receiver',
-  shortName: 'Tactical',
+  id: 'ar15_lower_tactical',
+  name: 'Automatic Lower receiver',
+  shortName: 'Automatic',
   asset: lowerTac,
   offsetX: px(0),
   offsetY: px(0),
@@ -102,6 +111,13 @@ export const AR15LowerTac: GunPart = {
     stock: {
       offsetX: px(0),
       offsetY: px(-4)
+    },
+  },
+  stats: {
+    reliability: 65,
+    rateOfFire: {
+      semiShots: 3,
+      autoShots: 5,
     },
   },
 }

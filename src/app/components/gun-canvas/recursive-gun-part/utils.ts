@@ -105,16 +105,6 @@ export const getPositionWithParent = (
   }[resultKey]
 }
 
-// Check hardpoints compatibility
-const isCompatible = (h1: Hardpoint, h2: Hardpoint) =>  {
-  const [json1, json2] = [h1, h2].map(hardpoint => JSON.stringify({
-    ...hardpoint,
-    part: null,
-  }))
-
-  return json1 === json2
-}
-
 export const keepCompatibleHardpoints = (refPart: GunPart, newPart: GunPart): Record<string, Hardpoint> | null => {
   if (!refPart.hardpoints) {
     return newPart.hardpoints
@@ -133,16 +123,17 @@ export const keepCompatibleHardpoints = (refPart: GunPart, newPart: GunPart): Re
         }
       }
 
-      if (isCompatible(hp, refPart.hardpoints[key])) {
-        return {
-          ...acc,
-          [key]: refPart.hardpoints[key]
-        }
-      }
+      const oldPart = refPart.hardpoints[key].part
+      const newPart = hp.part
 
       return {
         ...acc,
-        [key]: hp,
+        [key]: {
+          ...hp,
+          part: hp.options.some(option => option.id === oldPart?.id)
+            ? oldPart
+            : newPart
+        }
       }
     }, {})
 }

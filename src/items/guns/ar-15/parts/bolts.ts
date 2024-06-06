@@ -4,6 +4,7 @@ import { GunPart } from '~/types'
 import { px } from '~/utils'
 
 export const AR15BoltStandard: GunPart = {
+  id: 'ar15_bolt_standard',
   name: 'Standard bolt',
   shortName: 'Standard',
   asset: boltStandard,

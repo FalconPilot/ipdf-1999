@@ -5,6 +5,7 @@ import { GunPart } from '~/types'
 import { px } from '~/utils'
 
 export const AR15GripStandard: GunPart = {
+  id: 'ar15_grip_standard',
   name: 'Standard grip',
   shortName: 'Standard',
   asset: gripStandard,
@@ -14,6 +15,7 @@ export const AR15GripStandard: GunPart = {
 }
 
 export const AR15GripTactical: GunPart = {
+  id: 'ar15_grip_tactical',
   name: 'Tactical grip',
   shortName: 'Tactical',
   asset: gripTactical,

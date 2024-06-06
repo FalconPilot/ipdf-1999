@@ -1,17 +1,17 @@
-import laserPeq from 'public/parts/toprail_laser_peq.png'
+import laserPeq from 'public/parts/siderail_laser_peq.png'
 
 import { GunPart } from '~/types'
 import { px } from '~/utils'
 
-export const TopRailLaser: GunPart = {
-  id: 'toprail_laser',
+export const SideRailLaser: GunPart = {
+  id: 'siderail_laser',
   name: 'Laser pointer',
   shortName: 'Laser',
   offsetX: px(0),
   offsetY: px(8),
   asset: laserPeq,
   forbids: [
-    'siderail_laser',
+    'toprail_laser',
   ],
   hardpoints: null,
 }

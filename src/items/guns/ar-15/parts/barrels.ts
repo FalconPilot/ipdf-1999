@@ -47,7 +47,7 @@ const shortHandguardHardpoints: Record<string, Hardpoint> = {
     originX: 'center',
     originY: 'top',
     offsetX: px(-80),
-    offsetY: px(2),
+    offsetY: px(3),
     part: AR15GasTubeShort,
     options: [
       AR15GasTubeShort,
@@ -60,6 +60,7 @@ const commonHardpoints = {
 }
 
 export const AR15BarrelShort: GunPart = {
+  id: 'ar15_barrel_short',
   name: 'Short barrel',
   shortName: 'Short',
   asset: barrelShort,
@@ -72,6 +73,7 @@ export const AR15BarrelShort: GunPart = {
 }
 
 export const AR15BarrelStub: GunPart = {
+  id: 'ar15_barrel_stub',
   name: 'Stub barrel',
   shortName: 'Stub',
   asset: barrelStub,
@@ -83,7 +85,7 @@ export const AR15BarrelStub: GunPart = {
   },
   childrenOffsets: {
     handguard: {
-      offsetX: px(46),
+      offsetX: px(45),
       offsetY: px(0),
     },
     gastube: {

@@ -2,11 +2,11 @@ import handguardShortStd from 'public/parts/ar15_handguard_short_std.png'
 import risShortTac from 'public/parts/ar15_ris_tac.png'
 import risShortSkel from 'public/parts/ar15_handguard_skel.png'
 
-import { TopRailLaser } from '~/items/common-parts'
+import { SideRailLaser, TopRailLaser } from '~/items/common-parts'
 import { GunPart, Hardpoint } from '~/types'
 import { px } from '~/utils'
 
-import { AR15GasblockSight } from './gasblocks'
+import { AR15GasblockSight, AR15GasblockSlim } from './gasblocks'
 
 const commonHardpoints: Record<string, Hardpoint> = {
   gasblock: {
@@ -19,8 +19,9 @@ const commonHardpoints: Record<string, Hardpoint> = {
     part: AR15GasblockSight,
     options: [
       AR15GasblockSight,
+      AR15GasblockSlim,
     ],
-  }
+  },
 }
 
 const topRailHardpoints: Record<string, Hardpoint> = {
@@ -45,11 +46,13 @@ const sideRailHardpoints: Record<string, Hardpoint> = {
     zlayer: 87,
     originX: 'center',
     originY: 'center',
-    offsetX: px(0),
-    offsetY: px(0),
+    offsetX: px(40),
+    offsetY: px(-8),
     allowEmpty: true,
     part: null,
-    options: [],
+    options: [
+      SideRailLaser,
+    ],
   },
 }
 
@@ -68,6 +71,7 @@ const underRailHardpoints: Record<string, Hardpoint> = {
 }
 
 export const AR15HandguardShortStd: GunPart = {
+  id: 'ar15_standard_short_handguard',
   name: 'Standard short handguard',
   shortName: 'Standard',
   asset: handguardShortStd,
@@ -77,6 +81,7 @@ export const AR15HandguardShortStd: GunPart = {
 }
 
 export const AR15RISTac: GunPart = {
+  id: 'ar15_short_ris',
   name: 'Tactical short RIS',
   shortName: 'Short TAC-RIS',
   asset: risShortTac,
@@ -91,6 +96,7 @@ export const AR15RISTac: GunPart = {
 }
 
 export const AR15RISSkel: GunPart = {
+  id: 'ar15_skeletonized_ris_short',
   name: 'Skeletonized short RIS',
   shortName: 'Short SKEL-RIS',
   asset: risShortSkel,
@@ -100,5 +106,11 @@ export const AR15RISSkel: GunPart = {
     ...commonHardpoints,
     ...topRailHardpoints,
     ...sideRailHardpoints,
+  },
+  childrenOffsets: {
+    siderail: {
+      offsetX: px(15),
+      offsetY: px(0),
+    }
   },
 }

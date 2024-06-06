@@ -4,6 +4,7 @@ import { GunPart } from '~/types'
 import { px } from '~/utils'
 
 export const OpticTacticalRDS: GunPart = {
+  id: 'optic_red_dot_tactical',
   name: 'Tactical Red dot sight',
   shortName: 'Tactical RDS',
   asset: rdsTac,

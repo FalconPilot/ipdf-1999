@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 
 import { useGunEditor } from '~/app/contexts'
 import { CssSize, GunPart, Hardpoint } from '~/types'
-import { entriesOf } from '~/utils'
+import { entriesOf, sizeFloor } from '~/utils'
 
 import { ContextualMenu } from './contextual-menu'
 import { getPositionWithParent, getRootPosition, keepCompatibleHardpoints } from './utils'
@@ -15,6 +15,7 @@ type PropsBase = {
   canvasHeight: CssSize<'px'>
   canvasWidth: CssSize<'px'>
   editable?: boolean
+  forbiddenList: string[]
   patchGun: (coreHardpoint: Hardpoint) => void
 }
 
@@ -37,6 +38,7 @@ type PropsWithoutParent = PropsBase & {
 // Single part recursive component
 export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = ({
   xray,
+  forbiddenList,
   editable,
   parent,
   parentTop,
@@ -131,13 +133,17 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
   }
 
   // Calculate X/Y positions in canvas
-  const topPos = parent && parentTop
-    ? getPositionWithParent(hardpoint, hardpointKey, parent, parentTop, 'Y', 'height')
-    : getRootPosition(hardpoint, canvasHeight, 'Y', 'height')
+  const topPos = sizeFloor(
+    parent && parentTop
+      ? getPositionWithParent(hardpoint, hardpointKey, parent, parentTop, 'Y', 'height')
+      : getRootPosition(hardpoint, canvasHeight, 'Y', 'height')
+  )
 
-  const leftPos = parent && parentLeft
-    ? getPositionWithParent(hardpoint, hardpointKey, parent, parentLeft, 'X', 'width')
-    : getRootPosition(hardpoint, canvasWidth, 'X', 'width')
+  const leftPos = sizeFloor(
+    parent && parentLeft
+      ? getPositionWithParent(hardpoint, hardpointKey, parent, parentLeft, 'X', 'width')
+      : getRootPosition(hardpoint, canvasWidth, 'X', 'width')
+  )
 
   // Render
   return (
@@ -168,6 +174,7 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
       {menu && contextualMenu && (
         createPortal(
           <ContextualMenu
+            forbiddenList={forbiddenList}
             hardpoint={hardpoint}
             selectPart={patchPart}
           />,
@@ -187,6 +194,7 @@ export const RecursiveGunPart: React.FC<PropsWithoutParent | PropsWithParent> = 
         <RecursiveGunPart
           key={key}
           xray={xray}
+          forbiddenList={forbiddenList}
           editable={editable}
           parent={hardpoint}
           parentTop={topPos}
